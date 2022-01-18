@@ -1,0 +1,50 @@
+agent:
+  listen:
+    address: <%= @listen_address %>
+    network: <%= @listen_network %>
+    websocket: <%= @listen_websocket %>
+  configuration:
+    poll_period: <%= @agent_configuration_poll_period %>s
+  gitops:
+    poll_period: <%= @agent_gitops_poll_period %>s
+    project_info_cache_ttl: <%= @agent_gitops_project_info_cache_ttl %>s
+    project_info_cache_error_ttl: <%= @agent_gitops_project_info_cache_error_ttl %>s
+  kubernetes_api:
+    listen:
+      address: <%= @kubernetes_api_listen_address %>
+    url_path_prefix: /
+  info_cache_ttl: <%= @agent_info_cache_ttl %>s
+  info_cache_error_ttl: <%= @agent_info_cache_error_ttl %>s
+gitlab:
+  address: <%= @gitlab_address %>
+  authentication_secret_file: <%= @authentication_secret_file %>
+observability:
+  usage_reporting_period: <%= @metrics_usage_reporting_period %>s
+redis:
+  network: <%= @redis_network %>
+  tls:
+    enabled: <%= @redis_ssl %>
+  <%- if @redis_password_file %>
+  password_file: <%= @redis_password_file %>
+  <%- end %>
+  <%- if @redis_sentinels.empty? %>
+  server:
+    address: '<%= @redis_address %>'
+  <%- else %>
+  sentinel:
+    master_name: <%= @redis_sentinels_master_name %>
+    addresses:
+    <%- @redis_sentinels.each do |sentinel| %>
+      - '<%= sentinel['host'] %>:<%= sentinel['port'] %>'
+    <%- end %>
+  <%- end %>
+api:
+  listen:
+    network: <%= @internal_api_listen_network %>
+    address: <%= @internal_api_listen_address %>
+    authentication_secret_file: <%= @authentication_secret_file %>
+private_api:
+  listen:
+    network: <%= @private_api_listen_network %>
+    address: <%= @private_api_listen_address %>
+    authentication_secret_file: <%= @private_api_authentication_secret_file %>
